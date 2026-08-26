@@ -68,17 +68,59 @@ h1, h2, .display{
 
 
 /* =======================================================
+   TELA INICIAL (botão de tela cheia)
+   É a primeira coisa que aparece. Fica acima até da introdução
+   (z-index maior) e some assim que a pessoa toca no botão.
+   ======================================================= */
+#start-screen{
+  position:fixed; inset:0;
+  z-index:60; /* acima do #intro (50), pra ser a primeira camada visível */
+  display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(ellipse at 50% 30%, #241a3a 0%, #120c1e 70%);
+  transition:opacity .6s ease, visibility .6s ease;
+}
+
+/* Classe adicionada via JS assim que o botão é tocado */
+#start-screen.hide{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+}
+
+#fullscreen-btn{
+  display:flex; flex-direction:column; align-items:center; gap:.6rem;
+  font-family:'Fredoka', sans-serif;
+  font-size:1.05rem;
+  font-weight:600;
+  color:var(--text-light);
+  background:var(--bg-panel-2);
+  border:1px solid var(--accent-violet-dim);
+  padding:1.4rem 2rem;
+  border-radius:20px;
+  cursor:pointer;
+  box-shadow:0 0 0 0 rgba(255,180,84,0.4);
+  animation:pulse-glow 2.4s ease-in-out infinite; /* leve pulsar pra chamar atenção */
+}
+#fullscreen-btn .icon{ font-size:1.8rem; color:var(--accent-amber); }
+
+@keyframes pulse-glow{
+  0%,100%{ box-shadow:0 0 0 0 rgba(255,180,84,0.35); }
+  50%{ box-shadow:0 0 0 14px rgba(255,180,84,0); }
+}
+
+
+/* =======================================================
    TELA DE INTRODUÇÃO (as frases que aparecem e somem)
    ======================================================= */
 #intro{
   position:fixed; inset:0;
-  z-index:50; /* fica por cima de tudo */
+  z-index:50; /* fica por cima do conteúdo, abaixo da tela inicial */
   display:flex; align-items:center; justify-content:center;
   background:radial-gradient(ellipse at 50% 30%, #241a3a 0%, #120c1e 70%);
   transition:opacity 1s ease, visibility 1s ease;
 }
 
-/* Classe adicionada via JS quando a introdução termina (ou é pulada) */
+/* Classe adicionada via JS quando a introdução termina */
 #intro.hide{
   opacity:0;
   visibility:hidden;
@@ -97,21 +139,6 @@ h1, h2, .display{
 }
 
 #intro-text.show{ opacity:1; }
-
-/* Botão discreto pra pular a introdução */
-#intro-skip{
-  position:absolute; bottom:2rem; left:50%; transform:translateX(-50%);
-  font-size:.75rem;
-  color:var(--text-dim);
-  background:none;
-  border:1px solid var(--accent-violet-dim);
-  padding:.5rem 1rem;
-  border-radius:999px;
-  cursor:pointer;
-  font-family:'Plus Jakarta Sans';
-  opacity:.7;
-}
-#intro-skip:hover{ opacity:1; }
 
 
 /* =======================================================
@@ -262,7 +289,7 @@ main{
    ACESSIBILIDADE: respeita quem prefere menos animação
    ======================================================= */
 @media (prefers-reduced-motion: reduce){
-  .msg-row, #intro-text, .firefly{
+  .msg-row, #intro-text, .firefly, #fullscreen-btn{
     transition:none !important;
     animation:none !important;
     opacity:1 !important;
