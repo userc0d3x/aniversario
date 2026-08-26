@@ -78,7 +78,7 @@ fullscreenBtn.addEventListener('click', () => {
    mexa aqui:
    ------------------------------------------------------- */
 const phrases = [
-  "oi jana",
+  "Falaa Janaaa",
   "parabéns, hoje é seu dia 🎂",
   "vamos relembrar alguns momentos?"
 ];
