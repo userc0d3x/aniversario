@@ -17,11 +17,20 @@
   <!-- Fundo animado com os pontinhos de "vaga-lume" (gerados via JS) -->
   <div class="fireflies" id="fireflies"></div>
 
+  <!-- Tela inicial: aparece primeiro, sozinha, com um botão pra abrir
+       em tela cheia (some da barra de endereço/navegação do celular).
+       Só depois de tocar nesse botão a sequência de frases começa. -->
+  <div id="start-screen">
+    <button id="fullscreen-btn">
+      <span class="icon">⛶</span>
+      abrir em tela cheia
+    </button>
+  </div>
+
   <!-- Tela de introdução: mostra as frases "oi jana" / "parabéns..." etc.
-       antes de revelar o chat. Some sozinha ou pode ser pulada. -->
+       antes de revelar o chat. Some sozinha quando termina. -->
   <div id="intro">
     <div id="intro-text"></div>
-    <button id="intro-skip">pular</button>
   </div>
 
   <!-- Cabeçalho fixo no topo, parecido com o topo de um app de conversa -->
