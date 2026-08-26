@@ -31,7 +31,45 @@ for (let i = 0; i < fCount; i++) {
 
 
 /* -------------------------------------------------------
-   2) SEQUÊNCIA DE INTRODUÇÃO
+   2) TELA INICIAL — BOTÃO DE TELA CHEIA
+   É a primeira coisa que a pessoa vê. Ao tocar no botão:
+     a) tenta colocar o site em modo tela cheia (esconde a
+        barra de endereço do navegador no celular);
+     b) esconde a tela inicial;
+     c) só então começa a sequência de frases da introdução.
+
+   Pedir tela cheia só funciona como resposta direta a um
+   clique/toque (por isso está dentro do listener do botão),
+   e alguns navegadores (principalmente Safari no iPhone) não
+   suportam tela cheia pra página inteira — nesses casos o
+   pedido é simplesmente ignorado e o site continua normal.
+   ------------------------------------------------------- */
+const startScreen = document.getElementById('start-screen');
+const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+function requestSiteFullscreen() {
+  const el = document.documentElement; // a página inteira
+  const request =
+    el.requestFullscreen ||
+    el.webkitRequestFullscreen ||   // Safari/iOS mais antigos
+    el.msRequestFullscreen;         // navegadores antigos baseados em Edge/IE
+  if (request) {
+    request.call(el).catch(() => {
+      /* Se o navegador recusar (comum no iOS), apenas ignora
+         e segue com o site em modo normal. */
+    });
+  }
+}
+
+fullscreenBtn.addEventListener('click', () => {
+  requestSiteFullscreen();
+  startScreen.classList.add('hide');
+  setTimeout(stepIntro, 400); // pequena espera antes de começar as frases
+});
+
+
+/* -------------------------------------------------------
+   3) SEQUÊNCIA DE INTRODUÇÃO
    Mostra cada frase do array `phrases`, uma de cada vez,
    com fade-in e fade-out, e no final esconde a tela de
    introdução (revelando o chat atrás dela).
@@ -71,17 +109,11 @@ function stepIntro() {
   }, 1700); // tempo que a frase fica visível na tela
 
 }
-
-setTimeout(stepIntro, 400); // pequena espera antes de começar
-
-// Botão "pular": esconde a introdução na hora, sem esperar as frases
-document.getElementById('intro-skip').addEventListener('click', () => {
-  introEl.classList.add('hide');
-});
+// (a sequência só começa quando o botão de tela cheia é tocado — ver acima)
 
 
 /* -------------------------------------------------------
-   3) MONTAGEM DO CHAT
+   4) MONTAGEM DO CHAT
    Percorre o array `messages` (definido em data.js) e cria,
    pra cada item, uma "pílula" de data (quando muda de dia) e
    uma linha de mensagem com a foto + legenda + horário.
@@ -113,7 +145,7 @@ messages.forEach(m => {
 
 
 /* -------------------------------------------------------
-   4) REVELAR AO ROLAR (scroll reveal)
+   5) REVELAR AO ROLAR (scroll reveal)
    Usa IntersectionObserver pra detectar quando cada mensagem
    entra na área visível da tela, e só então adiciona a classe
    ".in" (que faz o fade-in + subida definidos no CSS).
