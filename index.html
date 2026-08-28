@@ -122,6 +122,29 @@ h1, h2, .display{
 
 
 /* =======================================================
+   BOTÃO DE MUTE (música de fundo)
+   Fica fixo no canto, acima de tudo, pra pausar/tocar a música
+   a qualquer momento depois que ela começar a tocar.
+   ======================================================= */
+#mute-btn{
+  position:fixed;
+  bottom:1.1rem; right:1.1rem;
+  z-index:40; /* abaixo do #intro e da tela inicial, acima do resto */
+  width:44px; height:44px;
+  border-radius:50%;
+  border:1px solid var(--accent-violet-dim);
+  background:var(--bg-panel-2);
+  color:var(--text-light);
+  font-size:1.2rem;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  opacity:0; visibility:hidden; /* some até a música começar a tocar */
+  transition:opacity .4s ease, visibility .4s ease;
+}
+#mute-btn.show{ opacity:1; visibility:visible; }
+
+
+/* =======================================================
    TELA DE INTRODUÇÃO (as frases que aparecem e somem)
    ======================================================= */
 #intro{
@@ -326,6 +349,14 @@ main{
     </button>
   </div>
 
+  <!-- Música de fundo. O <audio> fica escondido; o play só é chamado
+       dentro do clique do botão de tela cheia (navegadores bloqueiam
+       autoplay de áudio sem uma interação direta do usuário). -->
+  <audio id="bg-music" src="musica.mp3" loop preload="auto"></audio>
+
+  <!-- Botão flutuante pra pausar/tocar a música, caso ela queira -->
+  <button id="mute-btn" aria-label="Pausar música">🔊</button>
+
   <!-- Tela de introdução: mostra as frases "oi jana" / "parabéns..." etc.
        antes de revelar o chat. Some sozinha quando termina. -->
   <div id="intro">
@@ -443,6 +474,38 @@ fullscreenBtn.addEventListener('click', () => {
   requestSiteFullscreen();
   startScreen.classList.add('hide');
   setTimeout(stepIntro, 400); // pequena espera antes de começar as frases
+  startMusic(); // o toque no botão conta como interação do usuário
+});
+
+
+/* -------------------------------------------------------
+   3.5) MÚSICA DE FUNDO
+   Só é chamada dentro do clique do botão de tela cheia, porque
+   navegadores bloqueiam áudio com autoplay sem interação direta.
+   Depois de começar a tocar, o botão de mute aparece no canto
+   pra pessoa poder pausar/retomar quando quiser.
+   ------------------------------------------------------- */
+const bgMusic = document.getElementById('bg-music');
+const muteBtn = document.getElementById('mute-btn');
+
+function startMusic() {
+  bgMusic.volume = 0.6;
+  bgMusic.play()
+    .then(() => muteBtn.classList.add('show'))
+    .catch(() => {
+      /* Se o navegador ainda assim recusar, apenas ignora — o site
+         continua funcionando normalmente sem a música. */
+    });
+}
+
+muteBtn.addEventListener('click', () => {
+  if (bgMusic.paused) {
+    bgMusic.play();
+    muteBtn.textContent = '🔊';
+  } else {
+    bgMusic.pause();
+    muteBtn.textContent = '🔇';
+  }
 });
 
 
