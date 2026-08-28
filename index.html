@@ -521,9 +521,7 @@ muteBtn.addEventListener('click', () => {
 const phrases = [
   "FALAA JANAAAA",
   "PARABENS, hoje é seu dia 🎂",
-  "vamos relembrar alguns momentos?",
-  "tem musuquinha caso queira ouvir"
-  "espero que goste :)"
+  "vamos relembrar alguns momentos?"
 ];
 
 const introText = document.getElementById('intro-text');
@@ -549,7 +547,7 @@ function stepIntro() {
       idx++;
       stepIntro(); // chama a próxima frase
     }, 700); // tempo do fade-out antes de trocar o texto
-  }, 3000); // tempo que a frase fica visível na tela
+  }, 1700); // tempo que a frase fica visível na tela
 
 }
 // (a sequência só começa quando o botão de tela cheia é tocado — ver acima)
